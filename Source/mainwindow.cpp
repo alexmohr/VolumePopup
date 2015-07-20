@@ -8,7 +8,7 @@
 #include <QLabel>
 #include <QDialog>
 #include <QTimer>
-
+#include <qthread.h>
 #include <windows.h>
 
 
@@ -25,7 +25,18 @@ ui(new Ui::MainWindow)
 	hideDialog->show();
 	hideDialog->hide();
 
-	_volumeManager = new VolumeManager();
+	_volumeManager.ConnectCallback([this](float f)
+	{
+		VolumeChanged(f);
+	});
+	
+	_volumeChangedHandle = CreateEvent(
+		NULL,               // default security attributes
+		TRUE,               // manual-reset event
+		FALSE,              // initial state is nonsignaled
+		TEXT("VolumeChangedEvent")  // object name
+		);
+
 	_hideTimer = new QTimer(this);
 	_hideTimer->setSingleShot(true);
 	connect(_hideTimer, SIGNAL(timeout()), this, SLOT(Hide()));
@@ -67,9 +78,10 @@ ui(new Ui::MainWindow)
 	ui->progressBar->setAlignment(Qt::AlignCenter);
 	ui->progressBar->setTextVisible(false);
 
+
 	QTimer *timer = new QTimer(this);
 	connect(timer, SIGNAL(timeout()), this, SLOT(Update()));
-	timer->start(100);
+	timer->start(50);
 }
 
 
@@ -89,43 +101,50 @@ void MainWindow::Animate(float start, float target)
 	_opacityAnimation->start();
 }
 
+
+void MainWindow::VolumeChanged(float val)
+{
+	_lastVolume = val; 
+	SetEvent(_volumeChangedHandle);
+
+}
 // Slots
 void MainWindow::Update()
 {
-	double currentVolume = _volumeManager->GetVolume();
-	if (_lastVolume != currentVolume )
+	DWORD res = WaitForSingleObject(_volumeChangedHandle, 5);
+	if (res != 0) return;
+
+	_hideTimer->stop();
+
+	ui->progressBar->setValue(_lastVolume);
+
+	if (_lastVolume == 0)
 	{
-		_hideTimer->stop();
-
-		_lastVolume = currentVolume;
-		ui->progressBar->setValue(currentVolume);
-
-		if (currentVolume == 0)
-		{
-			ui->label->setPixmap(_vol0);
-		}
-		else if (currentVolume < 33)
-		{
-			ui->label->setPixmap(_vol33);
-		}
-		else if (currentVolume < 66)
-		{
-			ui->label->setPixmap(_vol66);
-		}
-		else
-		{
-			ui->label->setPixmap(_vol99);
-		}
-
-
-		if (!_windowShown)
-		{
-			Animate(0, MAX_OPACITY);
-		}
-
-		_windowShown = true;
-		_hideTimer->start(HIDE_TIMEOUT);
+	ui->label->setPixmap(_vol0);
 	}
+	else if (_lastVolume < 33)
+	{
+	ui->label->setPixmap(_vol33);
+	}
+	else if (_lastVolume < 66)
+	{
+	ui->label->setPixmap(_vol66);
+	}
+	else
+	{
+	ui->label->setPixmap(_vol99);
+	}
+
+
+	if (!_windowShown)
+	{
+	Animate(0, MAX_OPACITY);
+	}
+
+	_windowShown = true;
+	_hideTimer->start(HIDE_TIMEOUT);
+
+	ResetEvent(_volumeChangedHandle);
 }
 
 void MainWindow::Hide()

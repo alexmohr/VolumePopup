@@ -19,7 +19,6 @@
     </ClCompile>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="mainwindow.cpp" />
-    <ClCompile Include="VolumeManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="mainwindow.h">
@@ -112,7 +111,7 @@
       <OutputFile>$(OutDir)\$(ProjectName).exe</OutputFile>
       <AdditionalLibraryDirectories>C:\Qt\5.5\msvc2013\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>C:\Qt\5.5\msvc2013\lib\qtmaind.lib;C:\Qt\5.5\msvc2013\lib\Qt5Cored.lib;C:\Qt\5.5\msvc2013\lib\Qt5Guid.lib;C:\Qt\5.5\msvc2013\lib\Qt5Qmld.lib;C:\Qt\5.5\msvc2013\lib\Qt5Widgetsd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>C:\Qt\5.5\msvc2013\lib\qtmaind.lib;C:\Qt\5.5\msvc2013\lib\Qt5Cored.lib;C:\Qt\5.5\msvc2013\lib\Qt5Guid.lib;C:\Qt\5.5\msvc2013\lib\Qt5Qmld.lib;C:\Qt\5.5\msvc2013\lib\Qt5Widgetsd.lib;Propsys.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -128,7 +127,7 @@
       <OutputFile>$(OutDir)\$(ProjectName).exe</OutputFile>
       <AdditionalLibraryDirectories>C:\Qt\5.5\msvc2013\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>false</GenerateDebugInformation>
-      <AdditionalDependencies>C:\Qt\5.5\msvc2013\lib\qtmain.lib;C:\Qt\5.5\msvc2013\lib\Qt5Core.lib;C:\Qt\5.5\msvc2013\lib\Qt5Gui.lib;C:\Qt\5.5\msvc2013\lib\Qt5Qml.lib;C:\Qt\5.5\msvc2013\lib\Qt5Widgets.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>C:\Qt\5.5\msvc2013\lib\qtmain.lib;C:\Qt\5.5\msvc2013\lib\Qt5Core.lib;C:\Qt\5.5\msvc2013\lib\Qt5Gui.lib;C:\Qt\5.5\msvc2013\lib\Qt5Qml.lib;C:\Qt\5.5\msvc2013\lib\Qt5Widgets.lib;Propsys.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

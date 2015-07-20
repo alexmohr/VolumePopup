@@ -15,9 +15,13 @@ class MainWindow : public QMainWindow
 
 public:
     explicit MainWindow(QWidget *parent = 0);
+	void VolumeChanged(float val);
+
+
     ~MainWindow();
 
 private:
+
 
     static const int ANIMATION_DURATION = 1000;
     const float MAX_OPACITY = 0.75;
@@ -28,10 +32,11 @@ private:
 
     Ui::MainWindow *ui;
 
+	HANDLE _volumeChangedHandle;
 
     QPropertyAnimation *_opacityAnimation;
     bool _windowShown = false;
-	VolumeManager* _volumeManager; 
+	VolumeManager _volumeManager; 
 	double _lastVolume; 
 
 	QPixmap _vol0; 
