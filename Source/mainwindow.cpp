@@ -93,7 +93,7 @@ void MainWindow::Animate(float start, float target)
 void MainWindow::Update()
 {
 	double currentVolume = _volumeManager->GetVolume();
-	if (_lastVolume != currentVolume)
+	if (_lastVolume != currentVolume )
 	{
 		_hideTimer->stop();
 

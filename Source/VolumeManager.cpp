@@ -14,6 +14,10 @@ bool VolumeManager::SetVolume(double nVolume, bool bScalar)
 
 	HRESULT hr = NULL;
 	IAudioEndpointVolume* endpointVolume = GetEndpointVolume();
+	if (endpointVolume == NULL)
+	{
+		return false;
+	}
 
 	if (bScalar == false)
 	{
@@ -27,13 +31,17 @@ bool VolumeManager::SetVolume(double nVolume, bool bScalar)
 
 	CoUninitialize();
 
-	return FALSE;
+	return true;
 }
 
 double VolumeManager::GetVolume()
 {
 	HRESULT hr = NULL;
 	IAudioEndpointVolume* endpointVolume = GetEndpointVolume();
+	if (endpointVolume == NULL)
+	{
+		return -1; 
+	}
 
 	float currentVolume = 0; 
 	hr = endpointVolume->GetMasterVolumeLevelScalar(&currentVolume);
@@ -63,6 +71,10 @@ IAudioEndpointVolume* VolumeManager::GetEndpointVolume()
 	hr = deviceEnumerator->GetDefaultAudioEndpoint(eRender, eConsole, &defaultDevice);
 	deviceEnumerator->Release();
 	deviceEnumerator = NULL;
+	if (hr != NO_ERROR)
+	{
+		return NULL; 
+	}
 
 	IAudioEndpointVolume *endpointVolume = NULL;
 	hr = defaultDevice->Activate(__uuidof(IAudioEndpointVolume),
